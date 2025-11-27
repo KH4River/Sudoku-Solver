@@ -1,21 +1,55 @@
-﻿html {
+﻿body {
     font-family: "Roboto Mono", monospace;
     font-optical-sizing: auto;
     font-style: normal;
+    background-color: #e2e2e2;
+    margin-top:5%;
 }
+h1 {
+text-align: center;
+}
+
+#button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:10%;
+}
+#button button{
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+}
+
 #sudoku-container {
     margin-block: 50px;
+    margin-inline: auto;
+    max-width: 600px;
+    width: 90%;
     display: grid;
-    grid-template-columns: repeat(9, auto);
+    grid-template-rows: repeat(9, 1fr);
+    grid-template-columns: repeat(9, 1fr);
+    aspect-ratio: 1;
     border: 3px solid #333;
 }
 #sudoku-container input {
-    width: 50px;
-    height: 50px;
-    border: 1px solid #999;
+    border: 1px solid #808080;
+    margin: 0;
+    padding: 0;
     text-align: center;
     font-size: 20px;
     font-weight: bold;
+}
+input:nth-child(3n){
+    border-right: 3px solid #333 !important;
+}
+input:nth-child(n+19):nth-child(-n+27),
+input:nth-child(n+46):nth-child(-n+54){
+    border-bottom: 3px solid #333 !important;
 }
 input {
     width: 100%;

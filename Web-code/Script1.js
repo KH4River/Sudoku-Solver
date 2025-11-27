@@ -88,7 +88,11 @@ function check_rules(sudoku_board, i, j) {
 function show_sudoku(sudoku_board, sudoku_cell) {
     for (let i = 0; i < sudoku_board.length; i++) {
         for (let j = 0; j < sudoku_board[i].length; j++) {
-            sudoku_cell[i][j].value = sudoku_board[i][j];
+            if(sudoku_board[i][j]!==0) {
+                sudoku_cell[i][j].value = sudoku_board[i][j];
+            } else {
+                sudoku_cell[i][j].value = ""
+            }
         }
     }
 }
@@ -100,13 +104,13 @@ function create_ext_sudoku_board(int_sudoku_board) {
         sudoku_arr.push([])
         for (let j = 0; j < int_sudoku_board[i].length; j++) {
             const cell = document.createElement("input");
-            cell.value = int_sudoku_board[i][j];
+            cell.value = "";
             cell.type = "text";
             cell.maxLength = 1;
             // adds event listener to the inputs, whenever user changes something it changes it in the internal sudoku board
             cell.addEventListener("input", (event) => {
                 if (!"123456789".includes(event.target.value)){//event is the thing that happend, target is where the event happend, value is what the user put in
-                    cell.value = "0"
+                    cell.value = ""
                 } else {
                     let val = parseInt(event.target.value)
                     int_sudoku_board[i][j] = val;
