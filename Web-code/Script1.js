@@ -101,15 +101,14 @@ function create_ext_sudoku_board(int_sudoku_board) {
         for (let j = 0; j < int_sudoku_board[i].length; j++) {
             const cell = document.createElement("input");
             cell.value = int_sudoku_board[i][j];
-            cell.type = "number";
+            cell.type = "text";
+            cell.maxLength = 1;
             // adds event listener to the inputs, whenever user changes something it changes it in the internal sudoku board
             cell.addEventListener("input", (event) => {
-                console.log("check")
-                let val = parseInt(event.target.value); //event is the thing that happend, target is where the event happend, value is what the user put in
-                if (isNaN(val) || val < 1 || val > 9) {
-                    cell.value = 0;
-
+                if (!"123456789".includes(event.target.value)){//event is the thing that happend, target is where the event happend, value is what the user put in
+                    cell.value = "0"
                 } else {
+                    let val = parseInt(event.target.value)
                     int_sudoku_board[i][j] = val;
                 }
                 console.log(int_sudoku_board);
@@ -135,7 +134,15 @@ function empty_sudoku_board() {
     ];
 }
 
-let internal_sudoku = empty_sudoku_board()
+function resetSudoku(sudoku) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            sudoku[i][j] = 0
+        }
+    }
+}
+
+const internal_sudoku = empty_sudoku_board()
 
 const ext_sudoku = create_ext_sudoku_board(internal_sudoku)
 
@@ -150,6 +157,6 @@ const solve_sudokuB = document.getElementById("solve-sudoku")
 })
 
 document.getElementById("reset-sudoku").addEventListener("click", () => {
-    internal_sudoku = empty_sudoku_board()
+    resetSudoku(internal_sudoku)
     show_sudoku(internal_sudoku, ext_sudoku)
 })
