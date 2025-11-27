@@ -1,6 +1,7 @@
 // JavaScript source code
 function valid_numbers_check(sudoku_board, rows, column, number, bol) {
     let l = sudoku_board.length;
+    if(number===0) {return true}
     //checks if a number can be put in the column
     for (let r = 0; r < l; r++) { 
         if (bol && r == rows) { continue; }
@@ -111,6 +112,7 @@ function create_ext_sudoku_board(int_sudoku_board) {
             cell.addEventListener("input", (event) => {
                 if (!"123456789".includes(event.target.value)){//event is the thing that happend, target is where the event happend, value is what the user put in
                     cell.value = ""
+                    window.alert("put a number between 1 and 9")
                 } else {
                     let val = parseInt(event.target.value)
                     int_sudoku_board[i][j] = val;
@@ -153,14 +155,19 @@ const ext_sudoku = create_ext_sudoku_board(internal_sudoku)
 //creates an event listener for the solve sudoku button, when clicked it solves the sudoku and shows the solved sudoku on the board
 const solve_sudokuB = document.getElementById("solve-sudoku")
     solve_sudokuB.addEventListener("click", () => {
-        console.log(internal_sudoku)
-        if (solve_sudoku(internal_sudoku, 0, 0)) {
-
-        show_sudoku(internal_sudoku, ext_sudoku)
-    }
-})
+        console.log("this defenetly should work")
+        if(check_rules(internal_sudoku, 0, 0)){
+            console.log("this should work right")
+            if (solve_sudoku(internal_sudoku, 0, 0)) {
+                console.log("this should work")
+                show_sudoku(internal_sudoku, ext_sudoku)
+            }
+        }else{
+            window.alert("check if your numbers are obeying sudoku rules")
+        }
+});
 
 document.getElementById("reset-sudoku").addEventListener("click", () => {
     resetSudoku(internal_sudoku)
     show_sudoku(internal_sudoku, ext_sudoku)
-})
+});
