@@ -6,7 +6,7 @@
 #sudoku-container {
     margin-block: 50px;
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(9, auto);
     border: 3px solid #333;
 }
 #sudoku-container input {

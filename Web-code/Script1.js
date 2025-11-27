@@ -1,6 +1,6 @@
 // JavaScript source code
 function valid_numbers_check(sudoku_board, rows, column, number, bol) {
-    let l = sudoku.length;
+    let l = sudoku_board.length;
     //checks if a number can be put in the column
     for (let r = 0; r < l; r++) { 
         if (bol && r == rows) { continue; }
@@ -28,7 +28,7 @@ function valid_numbers_check(sudoku_board, rows, column, number, bol) {
     return true
 }
 
-function solve_sudoku_board(sudoku_board, i, j) {
+function solve_sudoku(sudoku_board, i, j) {
     /*
      Function uses recursive backtracking to declare if the sudoku board is solved
      :param sudoku_board: the sudoku
@@ -46,14 +46,14 @@ function solve_sudoku_board(sudoku_board, i, j) {
     }
 
     //checks if a number is already in the current position, calls the function again if it is skipping the position in the process
-    if (sudoku_board[i][j] != 0) { return solve_sudoku_board(sudoku_board, i, j + 1) }
+    if (sudoku_board[i][j] != 0) { return solve_sudoku(sudoku_board, i, j + 1) }
 
     //goes through numbers 1 to 9 checking if it can be put there if it can it goes deeper into the recursion if it is not it goes to return false and declares the path as invalid
     for (let x = 1; x < 10; x++) {
         if (valid_numbers_check(sudoku_board, i, j, x, false)) {
             sudoku_board[i][j] = x
             
-            if (solve_sudoku_board(sudoku_board, i, j + 1)) {
+            if (solve_sudoku(sudoku_board, i, j + 1)) {
                 return true;
             }
             sudoku_board[i][j] = 0
@@ -63,6 +63,10 @@ function solve_sudoku_board(sudoku_board, i, j) {
 }
 
 function check_rules(sudoku_board, i, j) {
+    /*
+    """
+    "
+    */
     if (i == 8 && j == 9) { return true; }
 
     if (j == 9) {
@@ -76,12 +80,12 @@ function check_rules(sudoku_board, i, j) {
     return false
 }
 
-function show_sudoku_board(sudoku_board, sudoku_cell) {
-    /*
-        Function prints the sudoku board without a grid format
-        :param sudoku_board: the board
-        :return: nothing
-    */
+/**
+ * gets both sudoku boards and makes the external equal to the internal
+ * @param sudoku_board the internal sudoku board
+ * @param sudoku_cell the external sudoku board
+ */
+function show_sudoku(sudoku_board, sudoku_cell) {
     for (let i = 0; i < sudoku_board.length; i++) {
         for (let j = 0; j < sudoku_board[i].length; j++) {
             sudoku_cell[i][j].value = sudoku_board[i][j];
@@ -89,23 +93,36 @@ function show_sudoku_board(sudoku_board, sudoku_cell) {
     }
 }
 
-function create_sudoku_board(sudoku_board) {
+function create_ext_sudoku_board(int_sudoku_board) {
     const sudoku_arr = []
     const sudoku_container = document.getElementById("sudoku-container")
-    for (let i = 0; i < sudoku_board.length; i++) {
+    for (let i = 0; i < int_sudoku_board.length; i++) {
         sudoku_arr.push([])
-        for (let j = 0; j < sudoku_board[i].length; j++) {
+        for (let j = 0; j < int_sudoku_board[i].length; j++) {
             const cell = document.createElement("input");
-            cell.value = sudoku_board[i][j];
+            cell.value = int_sudoku_board[i][j];
             cell.type = "number";
+            // adds event listener to the inputs, whenever user changes something it changes it in the internal sudoku board
+            cell.addEventListener("input", (event) => {
+                console.log("check")
+                let val = parseInt(event.target.value); //event is the thing that happend, target is where the event happend, value is what the user put in
+                if (isNaN(val) || val < 1 || val > 9) {
+                    cell.value = 0;
+
+                } else {
+                    int_sudoku_board[i][j] = val;
+                }
+                console.log(int_sudoku_board);
+            });
             sudoku_container.appendChild(cell);
             sudoku_arr[i].push(cell)
+            
         }
     }
     return sudoku_arr
 }
-function make_empty_sudoku_board() {
-    sudoku = [
+function empty_sudoku_board() {
+    return [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -116,21 +133,23 @@ function make_empty_sudoku_board() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    return sudoku
 }
 
-const sud = create_sudoku_board(make_empty_sudoku_board())
+let internal_sudoku = empty_sudoku_board()
 
+const ext_sudoku = create_ext_sudoku_board(internal_sudoku)
+
+//creates an event listener for the solve sudoku button, when clicked it solves the sudoku and shows the solved sudoku on the board
 const solve_sudokuB = document.getElementById("solve-sudoku")
-console.log(solve_sudokuB)
     solve_sudokuB.addEventListener("click", () => {
-    if (solve_sudoku_board(sudoku, 0, 0)) {
+        console.log(internal_sudoku)
+        if (solve_sudoku(internal_sudoku, 0, 0)) {
 
-        show_sudoku_board(sudoku, sud)
+        show_sudoku(internal_sudoku, ext_sudoku)
     }
 })
 
 document.getElementById("reset-sudoku").addEventListener("click", () => {
-    sudoku = make_empty_sudoku_board()
-    show_sudoku_board(sudoku, sud)
+    internal_sudoku = empty_sudoku_board()
+    show_sudoku(internal_sudoku, ext_sudoku)
 })
