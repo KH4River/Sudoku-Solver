@@ -113,9 +113,14 @@ function create_ext_sudoku_board(int_sudoku_board) {
                 if (!"123456789".includes(event.target.value)){//event is the thing that happend, target is where the event happend, value is what the user put in
                     cell.value = ""
                     window.alert("put a number between 1 and 9")
+                
                 } else {
-                    let val = parseInt(event.target.value)
-                    int_sudoku_board[i][j] = val;
+                    if (event.target.value === "") { 
+                        int_sudoku_board[i][j] = 0
+                    }else{
+                        let val = parseInt(event.target.value)
+                        int_sudoku_board[i][j] = val;
+                    }
                 }
                 console.log(int_sudoku_board);
             });
